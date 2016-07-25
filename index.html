@@ -1,0 +1,633 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Demystifying Web Workers and Service Workers</title>
+
+		<meta name="description" content="Demystifying Web Workers and Service Workers">
+		<meta name="author" content="Nolan Lawson">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.min.css">
+		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
+
+		<!-- For syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<link rel="stylesheet" href="index.css">
+
+		<!-- If the query includes 'print-pdf', include the PDF print sheet -->
+		<script>
+			if( window.location.search.match( /print-pdf/gi ) ) {
+				var link = document.createElement( 'link' );
+				link.rel = 'stylesheet';
+				link.type = 'text/css';
+				link.href = 'css/print/pdf.css';
+				document.getElementsByTagName( 'head' )[0].appendChild( link );
+			}
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+	</head>
+
+	<body>
+
+		<div class="reveal">
+			<div class="slides">
+				<section>
+          <h2>Demystifying Web Workers and Service Workers</h2>
+          <img class="no-border" src="img/worker_kirby_big.png"/>
+
+            <h4>@nolanlawson</h4>
+          <div class="footer text-muted">
+           Kirby is &copy; Nintendo and HAL Laboratory
+          </div>
+
+        </section>
+
+				<section>
+					<h4>@nolanlawson</h4>
+
+					<img class="no-border" src="img/me.jpg" alt="photo of Nolan Lawson"/>
+
+
+				</section>
+
+        <section>
+          <img class="no-border" src="img/edge_14_now.jpg"/>
+
+          <div class="footer text-muted">
+            Credit: <a href="https://twitter.com/_paulverbeek/status/749270682278596608">@_paulverbeek</a>
+          </div>
+        </section>
+
+        <section>
+
+          <img class="no-border" style="display:inline-block" height="150" src="img/pouchdb.png" alt="pouchdb"/>
+
+        </section>
+        <section>
+          <h2>Why Web Workers?</h2>
+        </section>
+
+        <section>
+          <div>
+            <video height=680>
+              <source src="vid/kirby_1.webm" type="video/webm" />
+              <source src="vid/kirby_1.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+        </section>
+
+        <section>
+          <div>
+            <video style="max-width: 100%;" height=680>
+              <source src="vid/kirby_2.webm" type="video/webm" />
+              <source src="vid/kirby_2.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+        </section>
+
+        <section>
+          <h3>Every line of frontend JS you've ever written has (momentarily) stopped your page from working.</h3>
+
+        </section>
+
+        <section>
+          <div>
+            <video style="max-width: 100%;" height=680>
+              <source src="vid/kirby_3.webm" type="video/webm" />
+              <source src="vid/kirby_3.mp4" type="video/mp4" />
+            </video>
+          </div>
+
+        </section>
+
+        <section>
+          <h3>60 frames per second (FPS)</h3>
+          <div>
+            <video>
+              <source src="vid/flipbook.webm" type="video/webm" />
+              <source src="vid/flipbook.mp4" type="video/mp4" />
+            </video>
+          </div>
+          
+
+          <div class="footer text-muted">
+            Source: Eadweard Muybridge (public domain)
+          </div>
+
+        </section>
+
+        <section>
+          <h3>1000ms / 60 frames = 16.7ms</h3>
+          
+        </section>
+
+        <section>
+          <h3>Asynchronicity will save us!</h3>
+        </section>
+
+        <section>
+          <pre><code class="javascript">var v = "2.0 beta";
+var request = indexedDB.open("todos", v);
+
+request.onupgradeneeded = function(e) {
+  var db = request.result;
+  var store = db.createObjectStore("todo", {keyPath: "timeStamp"});
+};
+
+request.onsuccess = function(e) {
+  todoDB.indexedDB.db = e.target.result;
+  todoDB.indexedDB.getAllTodoItems();
+};
+
+request.onfailure = todoDB.indexedDB.onerror;</code></pre>
+          <div class="footer text-muted">
+            Source: <a href="http://www.html5rocks.com/en/tutorials/webdatabase/websql-indexeddb/">HTML5Rocks</a>
+          </div>
+        </section>
+
+        <section>
+          <div>
+            <video height=500>
+              <source src="vid/kirby_blocked_by_idb.webm" type="video/webm" />
+              <source src="vid/kirby_blocked_by_idb.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="footer text-muted">
+            Source: <a href="http://nolanlawson.github.io/database-comparison">nolanlawson.github.io/database-comparison</a>
+          </div>
+        </section>
+
+        <section>
+          <h3>Stuff that blocks the DOM</h3>
+          <ul>
+            <li class="fragment">IndexedDB</li>
+            <li class="fragment">AJAX</li>
+            <li class="fragment">JSON.parse</li>
+            <li class="fragment">fetch</li>
+            <li class="fragment">Garbage collection</li>
+            <li class="fragment"><strong>JavaScript!</strong></li>
+          </ul>
+        </section>
+
+        <section>
+          <div style="display:flex;flex-direction:row;">
+            <div style="min-width:168px;display:flex;justify-content:center;flex-direction:column;">
+              <img class="no-border"
+                   style="min-width:168px;flex-grow:0;"
+                   src="img/kirby_star_big.gif"/>
+            </div>
+            <h2 style="flex-shrink: 1;max-width: 500px" class="random-color">WEB WORKERS!</h2>
+            <div style="min-width:168px;display:flex;justify-content:center;flex-direction:column;">
+              <img class="no-border"
+                   style="min-width:168px;flex-grow:0;"
+                   src="img/kirby_star_big.gif"/>
+            </div>
+          </div>
+          
+        </section>
+
+        <section>
+          <div style="display:flex;flex-direction:row;">
+            <div style="flex-grow: 1; flex-shrink: 1">
+          <pre><code class="javascript">// index.js
+
+var worker = new Worker('worker.js');
+worker.postMessage('ping');
+worker.onmessage = function (e) {
+  console.log(e.data); // 'pong'
+};</code></pre>
+            </div>
+
+            <div style="flex-grow: 1; flex-shrink: 1;">
+          <pre><code class="javascript">// worker.js
+
+self.onmessage = function (e) {
+  console.log(e.data); // 'ping'
+  self.postMessage('pong');
+};</code></pre>
+</div>
+          </div>
+
+        </section>
+
+        <section>
+          <h3>UI thread (main thread)</h3>
+          <img class="no-border pixel-image" height="400" style="transform: translateY(20px)" src="img/kirby_paint.gif"/>
+          
+        </section>
+
+        <section>
+          <h3 style="transform:translateY(80px);">500KB JavaScript app</h3>
+          <img class="no-border pixel-image" height="750" style="transform: translateY(-80px)" src="img/kirby_busy.gif"/>
+        </section>
+
+        <section>
+          <img class="pixel-image no-border" width="700" src="img/kirby_three_dance.gif"/>
+
+        </section>
+
+        <section>
+          <h3>Four cores</h3>
+          <div class="quad-outer" style="transform: translateY(-30px)">
+            <div  class="quad-inner">
+              <img class="no-border pixel-image" style="transform: translate(0, 45px);" height="200" src="img/kirby_paint.gif"/>
+              <img class="no-border pixel-image" style="transform: translate(40px, 45px);" height="240" src="img/kirby_fight.gif"/>
+            </div>
+            <div  class="quad-inner">
+              <img class="no-border pixel-image" height="120" src="img/kirby_spin_dance.gif"/>
+              <img class="no-border pixel-image"  style="transform: translate(0, 5px);"height="200" src="img/kirby_run.gif"/>
+            </div>
+          </div>
+
+        </section>
+
+        <section>
+          <h3>What can Web Workers do?</h3>
+          <ul>
+            <li class="fragment">Standard JavaScript</li>
+            <li class="fragment">JSON</li>
+            <li class="fragment"><code>btoa()</code>, <code>atob()</code></li>
+            <li class="fragment">FileReader, Blob, ArrayBuffer</li>
+          </ul>
+
+        </section>
+
+        <section>
+          <h3>What can Web Workers do? <em>(cont.)</em></h3>
+          <ul>
+            <li class="">IndexedDB</li>
+            <li style="opacity:0"></li>
+            <li style="opacity:0"></li>
+            <li style="opacity:0"></li>
+          </ul>
+        </section>
+
+        <section>
+          <h4>IndexedDB (async!) blocks the DOM</h4>
+          <div>
+            <video style="max-width: 100%;transform:translateY(-10px);" height=680 src="vid/kirby_blocked_by_idb.webm" ></video>
+          </div>
+          <div class="footer text-muted" style="transform:translateY(-50px)">
+            Source: http://nolanlawson.github.io/database-comparison/
+          </div>
+        </section>
+
+        <section>
+          <h3>What can Web Workers do? <em>(cont.)</em></h3>
+          <ul>
+            <li class="">AJAX/fetch</li>
+            <li style="opacity:0"></li>
+            <li style="opacity:0"></li>
+            <li style="opacity:0"></li>
+          </ul>
+        </section>
+
+        <section>
+          <h4>Ajax (async!) blocks the DOM</h4>
+          <div>
+            <video style="max-width: 100%;transform:translateY(-10px);" height=680 src="vid/kirby_blocked_by_ajax.webm" ></video>
+          </div>
+        </section>
+
+        <section>
+          <h3>What can Web Workers do?</h3>
+          <ul>
+            <li class="">JavaScript</li>
+            <li class="">JSON</li>
+            <li class="">IndexedDB</li>
+            <li class="">AJAX</li>
+            <li class="fragment">...but not DOM 😢</li>
+            <li class="fragment">Virtual DOM!</li>
+          </ul>
+        </section>
+
+        <section>
+          <div>
+            <video height=680 src="vid/pokedex_loop.webm" ></video>
+          </div>
+
+        </section>
+
+        <section>
+          <img src="img/pokedex_architecture.png" alt="pokedex.org virtual dom architecture"/>
+
+          <div class="footer text-muted"  style="transform: translateY(-5px);">
+            Source: http://www.pocketjavascript.com/blog/2015/11/23/introducing-pokedex-org
+          </div>
+        </section>
+
+        <section>
+          <h3>Pokedex.org on a 2011 Galaxy Nexus</h3>
+          <div style="transform: translateY(-50px)">
+            <video height=680 src="vid/pokedex.webm" ></video>
+          </div>
+
+        </section>
+
+        <section>
+          <h3>Without workers</h3>
+          <img class="no-border" src="img/withoutworker.png"/>
+        </section>
+
+        <section>
+          <h3>With workers</h3>
+          <img class="no-border" src="img/withworker.png"/>
+        </section>
+
+        <section>
+          <h3>Pokedex.org bundle sizes</h3>
+          <table style="margin: 0 auto;">
+            <tr><td><strong>main.js</strong></td><td>24.1kB</td></tr>
+            <tr><td><strong>worker.js</strong></td><td>90.9kB</td></tr>
+            <tr><td><strong>serviceWorker.js</strong></td><td>15.8kB</td></tr>
+          </table>
+        </section>
+
+        <section>
+          <h3>React with Web Workers</h3>
+          <div style="transform: translateY(-50px)">
+            <video height=680 src="vid/react_worker.webm" ></video>
+          </div>
+
+          <div class="footer text-muted" style="transform: translateY(-100px);">
+            Source: http://blog.nparashuram.com/2015/12/react-web-worker-renderer.html
+          </div>
+        </section>
+
+        <section>
+          <h3>Angular 2 - without Web Workers</h3>
+          <div style="transform: translateY(-70px)">
+            <video height=680 src="vid/angular_before.webm" ></video>
+          </div>
+          <div class="footer text-muted" style="transform: translateY(-100px);">
+            Source: https://www.youtube.com/watch?v=Kz_zKXiNGSE
+          </div>
+        </section>
+
+        <section>
+          <h3>Angular 2 - with Web Workers</h3>
+          <div style="transform: translateY(-70px)">
+            <video height=680 src="vid/angular_after.webm" ></video>
+          </div>
+          <div class="footer text-muted" style="transform: translateY(-100px);">
+            Source: https://www.youtube.com/watch?v=Kz_zKXiNGSE
+          </div>
+        </section>
+
+        <section>
+          <h3>This is coming to frameworks</h3>
+        </section>
+
+        <section>
+          <h3>Angular 2</h3>
+          <img src="img/tweet_briant.png"/>
+        </section>
+
+        <section>
+          <h3>React</h3>
+          <img src="img/tweet_floyd.png"/>
+        </section>
+
+        <section>
+          <h3>Ember</h3>
+          <img src="img/skyrocket.png"/>
+          <div class="footer text-muted">
+            Source: https://github.com/runspired/skyrocket
+          </div>
+        </section>
+
+        <section>
+          <h3>Final thoughts</h3>
+        </section>
+
+        <section>
+          <img src="img/caniuse_webworkers.png" alt="caniuse.com page for web workers"/>
+
+        </section>
+
+        <section>
+          <img src="img/tweet_jaffa.png"/>
+        </section>
+        <section>
+          <h3>Four cores</h3>
+          <div class="quad-outer" style="transform: translateY(-30px)">
+            <div  class="quad-inner">
+              <div style="width:200px;height:200px;background: url(img/kirby_busy.gif) no-repeat;background-size: 150%;background-position: -50px 10px;" class="no-border pixel-image"></div>
+              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
+            </div>
+            <div class="quad-inner">
+              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
+              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
+            </div>
+          </div>
+
+        </section>
+
+        <section>
+          <h3>Four cores</h3>
+          <div class="quad-outer" style="transform: translateY(-30px)">
+            <div  class="quad-inner">
+              <img class="no-border pixel-image" style="transform: translate(0, 45px);" height="200" src="img/kirby_paint.gif"/>
+              <img class="no-border pixel-image" style="transform: translate(40px, 45px);" height="240" src="img/kirby_fight.gif"/>
+            </div>
+            <div  class="quad-inner">
+              <img class="no-border pixel-image" height="120" src="img/kirby_spin_dance.gif"/>
+              <img class="no-border pixel-image"  style="transform: translate(0, 5px);"height="200" src="img/kirby_run.gif"/>
+            </div>
+          </div>
+
+        </section>
+
+        <section>
+          <h2 class="random-color">Thank you!</h2>
+          <img class="no-border pixel-image" style="display:block" width="100" src="img/kirby_expedition.gif"/>
+          <h4>@nolanlawson</h4>
+          <h4 style="margin-top: 10px !important"><a href="http://nolanlawson.github.io/empire-2016">nolanlawson.github.io/empire-2016</a></h4>
+          <ul style="font-size: 14px !important;line-height:16px !important;">
+            <li><a href="demo1.html">First demo</a></li>
+            <li><a href="demo2.html">Second demo</a></li>
+            <li><a href="https://vimeo.com/125121010">Paul Lewis on Making a Silky Smooth Web</a></li>
+            <li><a href="https://meta.discourse.org/t/the-state-of-javascript-on-android-in-2015-is-poor/33889">The State of JavaScript on Android in 2015 is… poor</a> </li>
+            <li><a href="http://www.pocketjavascript.com/blog/2015/11/23/introducing-pokedex-org">Introducing Pokedex.org: a progressive webapp for Pokémon fans</a></li>
+            <li><a href="http://blog.nparashuram.com/2015/12/react-web-worker-renderer.html">React Custom Renderer using Web Workers</a></li>
+            <li><a href="http://blog.nparashuram.com/2016/02/using-webworkers-to-make-react-faster.html">Using Webworkers to make React faster </a></li>
+            <li><a href="http://nolanlawson.com/2015/09/29/indexeddb-websql-localstorage-what-blocks-the-dom/">
+              IndexedDB, WebSQL, LocalStorage – what blocks the DOM?
+            </a></li>
+            <li><a href="https://docs.google.com/document/d/1i3IA3TG00rpQ7MKlpNFYUF6EfLcV01_Cv3IYG_DjF7M/edit#">Blink Workers</a></li>
+            <li><a href="http://nolanlawson.com/2016/02/29/high-performance-web-worker-messages/">High-performance Web Worker messages</a></li>
+            <li><a href="https://blog.isleofcode.com/webworker-performance-benchmarks-2/">
+              WebWorker Performance Benchmarks
+            </a></li>
+            <li><a href="http://blog.runspired.com/2015/06/05/using-webworkers-to-bring-native-app-best-practices-to-javascript-spas/">
+              Using WebWorkers to bring native app best practices to javascript SPAs
+            </a></li>
+            <li><a href="https://plus.google.com/+MalteUbl/posts/NLyinvqwZHo">Handling event.preventDefault() in a WW</a></li>
+            <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Functions_and_classes_available_to_workers">
+              Functions and classes available to Web Workers
+            </a></li>
+            <li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=801176">
+              Bug 801176 - Support canvas 2D API from workers
+            </a></li>
+            <li><a href="https://medium.com/@cramforce/2016-will-be-the-year-of-concurrency-on-the-web-c39b1e99b30f">
+              2016 will be the year of concurrency on the web
+            </a></li>
+            <li><a href="https://www.youtube.com/watch?v=Kz_zKXiNGSE">Using Web Workers for more responsive apps (video)</a></li>
+            <li><a href="https://www.oreilly.com/ideas/angular-2-and-the-future-of-html5-apps">
+              Angular 2 and the future of HTML5 apps
+            </a></li>
+          </ul>
+
+        </section>
+      </div>
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.min.js"></script>
+		<script src="js/jquery-1.9.1.js"></script>
+		<script src="js/highcharts.js"></script>
+		<script src="js/highcharts-exporting.js"></script>
+    <script src="js/ua.js"></script>
+
+    <script src="js/randomColor.js"></script>
+
+		<script>
+
+      var randomizedTextTimeout;
+
+      function randomizeText(slide) {
+        var rando = slide.querySelector('.random-color');
+        if (rando) {
+          randomizedTextTimeout = setInterval(function () {
+            requestAnimationFrame(function () {
+              if (!rando.dataset.colorized) {
+                var text = rando.innerText;
+                var newText = '';
+                for (var i = 0; i < text.length; i++) {
+                  newText += '<span style="color:' + randomColor() + '">' + text.charAt(i) + '</span>';
+                }
+                rando.innerHTML = newText;
+                rando.dataset.colorized = true;
+              } else {
+                var spans = rando.querySelectorAll('span');
+                for (var i = 0; i < spans.length; i++) {
+                  spans[i].style.color = randomColor();
+                }
+              }
+            });
+          }, 100);
+        }
+      }
+
+			// Full list of configuration options available here:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+        fragments: true,
+
+				theme: Reveal.getQueryHash().theme, // available themes are in /css/theme
+				transition: Reveal.getQueryHash().transition || 'linear', // default/cube/page/concave/zoom/linear/fade/none
+
+				// Parallax scrolling
+				// parallaxBackgroundImage: 'https://s3.amazonaws.com/hakim-static/reveal-js/reveal-parallax-1.jpg',
+				// parallaxBackgroundSize: '2100px 900px',
+
+				// Optional libraries used to extend on reveal.js
+				dependencies: [
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } }
+				]
+			});
+
+      function playVideo() {
+        var videos = Array.from(
+          document.querySelectorAll('section.present video'));
+        videos.forEach(function (vid) {
+          vid.loop = true;
+          vid.currentTime = 0;
+          vid.play();
+        });
+
+        var otherVideos = Array.from(document.querySelectorAll('section.past video')).concat(
+          Array.from(document.querySelectorAll('section.future video')));
+        otherVideos.forEach(function (vid) {
+          vid.pause();
+        });
+      }
+
+      function playGif() {
+        var gifs = Array.from(
+          document.querySelectorAll('section.present img[src*=gif]'));
+        gifs.forEach(function (gif) {
+          var newSrc = gif.src.replace(/(\?nonce=.*?)?$/, '?nonce=' +
+            Math.round(100000000 * Math.random()));
+          // reset the gif
+          gif.src = '';
+          requestAnimationFrame(function () {
+            gif.src = newSrc;
+          });
+        });
+      }
+
+      Reveal.addEventListener( 'slidechanged', function( event ) {
+        // event.previousSlide, event.currentSlide, event.indexh, event.indexv
+        var notes = event.currentSlide.querySelector(".notes");
+        if(notes) {
+          console.info(notes.innerHTML.replace(/\n\s+/g,'\n'));
+        }
+
+        requestAnimationFrame(function () {
+          clearInterval(randomizedTextTimeout);
+          randomizeText(event.currentSlide);
+          requestAnimationFrame(function () {
+            playVideo();
+            playGif();
+          });
+
+        });
+      } );
+
+      Reveal.addEventListener('fragmentshown', function (e) {
+        // show the animations
+        $(e.target).find('li span').each(function (i, el) {
+          $(el).addClass('anim' + (i + 1));
+        });
+      });
+
+      Reveal.addEventListener('fragmenthidden', function (e) {
+        // hide the animations
+        $(e.target).find('li span').each(function (i, el) {
+          $(el).removeClass('anim' + (i + 1));
+        });
+      });
+
+      // log the first slide's notes as well
+      var notes = document.querySelector('section.present aside.notes');
+      if (notes) {
+        console.info(notes.innerHTML.replace(/\n\s+/g, '\n'));
+      }
+
+      playVideo();
+      playGif();
+
+      randomizeText(document.querySelector('section.present'));
+
+    </script>
+
+	</body>
+</html>
