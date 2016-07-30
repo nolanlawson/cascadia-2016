@@ -63,7 +63,7 @@
 
         <section>
           <div>
-            <video style="max-width: 100%;">
+            <video class="play-once" style="max-width: 100%;">
               <source src="vid/freakingout.webm" type="video/webm" />
               <source src="vid/freakingout.mp4" type="video/mp4" />
             </video>
@@ -158,23 +158,19 @@
         </section>
 
         <section>
-          <pre><code class="javascript">var v = "2.0 beta";
-var request = indexedDB.open("todos", v);
+          <pre><code class="javascript">// Everything between here...
+$.ajax({
+  url: '/payload.json',
+  dataType: 'json',
+  success: function (response) {
+    // ... and here is free, right?
+  }
+});</code></pre>
+        </section>
 
-request.onupgradeneeded = function(e) {
-  var db = request.result;
-  var store = db.createObjectStore("todo", {keyPath: "timeStamp"});
-};
-
-request.onsuccess = function(e) {
-  todoDB.indexedDB.db = e.target.result;
-  todoDB.indexedDB.getAllTodoItems();
-};
-
-request.onfailure = todoDB.indexedDB.onerror;</code></pre>
-          <div class="footer text-muted">
-            Source: <a href="http://www.html5rocks.com/en/tutorials/webdatabase/websql-indexeddb/">HTML5Rocks</a>
-          </div>
+        <section>
+          <h2>IndexedDB</h2>
+          <h4>(Yes, even though it's async)</h4>
         </section>
 
         <section>
@@ -185,9 +181,41 @@ request.onfailure = todoDB.indexedDB.onerror;</code></pre>
             </video>
           </div>
           <div class="footer text-muted">
-            Source: <a href="http://nolanlawson.github.io/database-comparison">nolanlawson.github.io/database-comparison</a>
+            Source: <a href="http://nolanlawson.github.io/database-comparison/">Browser database comparison</a> and <a href="https://nolanlawson.com/2015/09/29/indexeddb-websql-localstorage-what-blocks-the-dom/">IndexedDB, WebSQL, LocalStorage - what blocks the DOM?</a>
           </div>
         </section>
+
+        <section>
+          <h2>AJAX</h2>
+          <h4>(Yes, even async)</h4>
+        </section>
+
+        <section>
+          <div>
+            <video height=500>
+              <source src="vid/kirby_blocked_by_ajax.webm" type="video/webm" />
+              <source src="vid/kirby_blocked_by_ajax.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </section>
+
+        <section>
+          <h2>fetch</h2>
+          <h4>(Yes, even though it has <code>response.json())</code></h4>
+        </section>
+
+        <section>
+          <div>
+            <video height=500>
+              <source src="vid/kirby_blocked_by_fetch.webm" type="video/webm" />
+              <source src="vid/kirby_blocked_by_fetch.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="footer text-muted">
+            Source: <a href="https://www.youtube.com/watch?v=Ls8zZ4n5DUE">Asynchronous non-blocking JSON.parse? Not so fast </a>
+          </div>
+        </section>
+
 
         <section>
           <h3>Stuff that blocks the DOM</h3>
@@ -243,94 +271,42 @@ self.onmessage = function (e) {
         </section>
 
         <section>
-          <h3>UI thread (main thread)</h3>
-          <img class="no-border pixel-image" height="400" style="transform: translateY(20px)" src="img/kirby_paint.gif"/>
-          
-        </section>
-
-        <section>
-          <h3 style="transform:translateY(80px);">500KB JavaScript app</h3>
-          <img class="no-border pixel-image" height="750" style="transform: translateY(-80px)" src="img/kirby_busy.gif"/>
-        </section>
-
-        <section>
-          <img class="pixel-image no-border" width="700" src="img/kirby_three_dance.gif"/>
-
-        </section>
-
-        <section>
-          <h3>Four cores</h3>
-          <div class="quad-outer" style="transform: translateY(-30px)">
-            <div  class="quad-inner">
-              <img class="no-border pixel-image" style="transform: translate(0, 45px);" height="200" src="img/kirby_paint.gif"/>
-              <img class="no-border pixel-image" style="transform: translate(40px, 45px);" height="240" src="img/kirby_fight.gif"/>
-            </div>
-            <div  class="quad-inner">
-              <img class="no-border pixel-image" height="120" src="img/kirby_spin_dance.gif"/>
-              <img class="no-border pixel-image"  style="transform: translate(0, 5px);"height="200" src="img/kirby_run.gif"/>
-            </div>
+          <img src="img/caniuse_webworkers.png" alt="caniuse page for Web Workers"/>
+          <div class="text-muted footer">
+            Source: <a href="http://caniuse.com/#feat=webworkers">Can I use Web Workers?</a>
           </div>
+        </section>
 
+        <section>
+          <div>
+            <video height=550>
+              <source src="vid/kirby_unblocked_by_idb.webm" type="video/webm" />
+              <source src="vid/kirby_unblocked_by_idb.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </section>
+
+        <section>
+          <h3>Who's using Web Workers?</h3>
+          <ul>
+            <li><a href="https://www.khanacademy.org/computer-programming/technical-diagram-processing-code-with-web-workers/4750617731399680">Khan Academy</a></li>
+            <li><a href="https://vimeo.com/174657014">VS Code (Monaco)</a></li>
+            <li><a href="https://twoguysarguing.wordpress.com/2010/11/04/html-5-game-of-life-web-workers/">HTML5 games</a></li>
+            <li>Many others</li>
+          </ul>
         </section>
 
         <section>
           <h3>What can Web Workers do?</h3>
           <ul>
-            <li class="fragment">Standard JavaScript</li>
+            <li class="fragment">Basic JavaScript</li>
             <li class="fragment">JSON</li>
-            <li class="fragment"><code>btoa()</code>, <code>atob()</code></li>
-            <li class="fragment">FileReader, Blob, ArrayBuffer</li>
-          </ul>
-
-        </section>
-
-        <section>
-          <h3>What can Web Workers do? <em>(cont.)</em></h3>
-          <ul>
-            <li class="">IndexedDB</li>
-            <li style="opacity:0"></li>
-            <li style="opacity:0"></li>
-            <li style="opacity:0"></li>
-          </ul>
-        </section>
-
-        <section>
-          <h4>IndexedDB (async!) blocks the DOM</h4>
-          <div>
-            <video style="max-width: 100%;transform:translateY(-10px);" height=680 src="vid/kirby_blocked_by_idb.webm" ></video>
-          </div>
-          <div class="footer text-muted" style="transform:translateY(-50px)">
-            Source: http://nolanlawson.github.io/database-comparison/
-          </div>
-        </section>
-
-        <section>
-          <h3>What can Web Workers do? <em>(cont.)</em></h3>
-          <ul>
-            <li class="">AJAX/fetch</li>
-            <li style="opacity:0"></li>
-            <li style="opacity:0"></li>
-            <li style="opacity:0"></li>
-          </ul>
-        </section>
-
-        <section>
-          <h4>Ajax (async!) blocks the DOM</h4>
-          <div>
-            <video style="max-width: 100%;transform:translateY(-10px);" height=680 src="vid/kirby_blocked_by_ajax.webm" ></video>
-          </div>
-        </section>
-
-        <section>
-          <h3>What can Web Workers do?</h3>
-          <ul>
-            <li class="">JavaScript</li>
-            <li class="">JSON</li>
-            <li class="">IndexedDB</li>
-            <li class="">AJAX</li>
-            <li class="fragment">...but not DOM 😢</li>
+            <li class="fragment">IndexedDB</li>
+            <li class="fragment">AJAX</li>
+            <li class="fragment">...but not DOM &#x0001f622;</li>
             <li class="fragment">Virtual DOM!</li>
           </ul>
+
         </section>
 
         <section>
@@ -346,14 +322,6 @@ self.onmessage = function (e) {
           <div class="footer text-muted"  style="transform: translateY(-5px);">
             Source: http://www.pocketjavascript.com/blog/2015/11/23/introducing-pokedex-org
           </div>
-        </section>
-
-        <section>
-          <h3>Pokedex.org on a 2011 Galaxy Nexus</h3>
-          <div style="transform: translateY(-50px)">
-            <video height=680 src="vid/pokedex.webm" ></video>
-          </div>
-
         </section>
 
         <section>
@@ -387,17 +355,7 @@ self.onmessage = function (e) {
         </section>
 
         <section>
-          <h3>Angular 2 - without Web Workers</h3>
-          <div style="transform: translateY(-70px)">
-            <video height=680 src="vid/angular_before.webm" ></video>
-          </div>
-          <div class="footer text-muted" style="transform: translateY(-100px);">
-            Source: https://www.youtube.com/watch?v=Kz_zKXiNGSE
-          </div>
-        </section>
-
-        <section>
-          <h3>Angular 2 - with Web Workers</h3>
+          <h3>Angular 2 Web Worker renderer</h3>
           <div style="transform: translateY(-70px)">
             <video height=680 src="vid/angular_after.webm" ></video>
           </div>
@@ -407,74 +365,54 @@ self.onmessage = function (e) {
         </section>
 
         <section>
-          <h3>This is coming to frameworks</h3>
+          <h3>Warning: experimental &#x26a0;&#xfe0f;</h3>
         </section>
 
         <section>
-          <h3>Angular 2</h3>
-          <img src="img/tweet_briant.png"/>
+          <h2> Service Workers </h2>
         </section>
 
         <section>
-          <h3>React</h3>
-          <img src="img/tweet_floyd.png"/>
-        </section>
-
-        <section>
-          <h3>Ember</h3>
-          <img src="img/skyrocket.png"/>
+          <img src="img/caniuse_sw.png" alt="caniuse page for Service Workers"/>
           <div class="footer text-muted">
-            Source: https://github.com/runspired/skyrocket
+            Source: <a href="http://caniuse.com/#feat=serviceworkers">Can I use service workers?</a>
           </div>
         </section>
 
-        <section>
-          <h3>Final thoughts</h3>
-        </section>
+        <section><pre><code class="java">
+  class ServiceWorker extends WebWorker {
+    /* ... */
+  }
+
+</code></pre></section>
 
         <section>
-          <img src="img/caniuse_webworkers.png" alt="caniuse.com page for web workers"/>
+          <div style="display:flex;flex-direction:row;">
+            <div style="flex-grow: 1; flex-shrink: 1">
+          <pre><code class="javascript">// index.js
 
-        </section>
-
-        <section>
-          <img src="img/tweet_jaffa.png"/>
-        </section>
-        <section>
-          <h3>Four cores</h3>
-          <div class="quad-outer" style="transform: translateY(-30px)">
-            <div  class="quad-inner">
-              <div style="width:200px;height:200px;background: url(img/kirby_busy.gif) no-repeat;background-size: 150%;background-position: -50px 10px;" class="no-border pixel-image"></div>
-              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register(
+            '/service-worker.js');
+}</code></pre>
             </div>
-            <div class="quad-inner">
-              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
-              <img class="no-border pixel-image" style="transform: translate(0, 65px);"height="200" src="img/kirby_sleep.gif"/>
-            </div>
-          </div>
 
-        </section>
+            <div style="flex-grow: 1; flex-shrink: 1;">
+          <pre><code class="javascript">// service-worker.js
 
-        <section>
-          <h3>Four cores</h3>
-          <div class="quad-outer" style="transform: translateY(-30px)">
-            <div  class="quad-inner">
-              <img class="no-border pixel-image" style="transform: translate(0, 45px);" height="200" src="img/kirby_paint.gif"/>
-              <img class="no-border pixel-image" style="transform: translate(40px, 45px);" height="240" src="img/kirby_fight.gif"/>
-            </div>
-            <div  class="quad-inner">
-              <img class="no-border pixel-image" height="120" src="img/kirby_spin_dance.gif"/>
-              <img class="no-border pixel-image"  style="transform: translate(0, 5px);"height="200" src="img/kirby_run.gif"/>
-            </div>
-          </div>
-
-        </section>
-
+self.addEventListener('fetch',
+    function (e) {
+      e.respondWith(fetch(e.request));
+    }
+);</code></pre>
+</div>
+</div>
+</section>
         <section>
           <h2 class="random-color">Thank you!</h2>
           <img class="no-border pixel-image" style="display:block" width="100" src="img/kirby_expedition.gif"/>
           <h4>@nolanlawson</h4>
-          <h4 style="margin-top: 10px !important"><a href="http://nolanlawson.github.io/empire-2016">nolanlawson.github.io/empire-2016</a></h4>
+          <h4 style="margin-top: 10px !important"><a href="http://nolanlawson.github.io/cascadia-2016">nolanlawson.github.io/cascadia-2016</a></h4>
           <ul style="font-size: 14px !important;line-height:16px !important;">
             <li><a href="demo1.html">First demo</a></li>
             <li><a href="demo2.html">Second demo</a></li>
@@ -577,7 +515,7 @@ self.onmessage = function (e) {
         var videos = Array.from(
           document.querySelectorAll('section.present video'));
         videos.forEach(function (vid) {
-          vid.loop = true;
+          vid.loop = !vid.classList.contains('play-once');
           vid.currentTime = 0;
           vid.play();
         });
