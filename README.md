@@ -1,4 +1,4 @@
-Web Workers: I like the way you work it
+Demystifying Web Workers and Service Workers
 =====
 
-Nolan's 30-minute talk on Web Workers for Empire JS 2016.
+Nolan's 25-minute talk on Web Workers and Service Workers for Cascadia Fest 2016.
