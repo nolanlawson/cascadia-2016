@@ -62,16 +62,10 @@
         </section>
 
         <section>
-          <div>
-            <video class="play-once" style="max-width: 100%;">
-              <source src="vid/freakingout.webm" type="video/webm" />
-              <source src="vid/freakingout.mp4" type="video/mp4" />
-            </video>
-            <div class="footer text-muted">
-              Credit: <a href="https://frinkiac.com/gif/S07E12/1003602/1006438/SSdtIGZyZWFraW5nIG91dCE=">Frinkiac</a>
-            </div>
+          <img class="no-border" style="max-height:600px;transform:translateY(-50px);" src="img/hype_train.jpg" alt="hype train"/>
+          <div class="footer text-muted" style="transform:translateY(-50px);">
+            Source: <a href="https://www.flickr.com/photos/juergo/14488477365/in/photolist-o5iexT-dNntQG-9D2fSJ-cRYrzm-rYa3oE-9D2gmf-9CYkPe-9D2gWJ-rHRAvC-9H4JPr-dppe69-dppd89-926UvM-dNntjS-dppcLh-dpp4GX-dppdf1-dppf23-boVvSK-7GYniC-9H4K1Z-5RPb7F-dpp7np-qvzSnJ-9pxEBx-gnpTaP-dppdFN-zSSAuL-7GYkBU-f4U7fq-fL6h8W-926Uz6-gnpBzE-9F4XBD-926UC4-dpp4PB-dppeVo-boVvyx-dpp67R-boVwtp-boVUNF-hxyJ7n-boVVmX-boVV5H-8GRfja-dpp7LF-dppe1b-92a33W-6kem38-gnpYus">Flickr</a>
           </div>
-
         </section>
 
 				<section>
@@ -296,6 +290,7 @@ self.onmessage = function (e) {
           </ul>
         </section>
 
+        <!--
         <section>
           <h3>What can Web Workers do?</h3>
           <ul>
@@ -367,7 +362,7 @@ self.onmessage = function (e) {
         <section>
           <h3>Warning: experimental &#x26a0;&#xfe0f;</h3>
         </section>
-
+-->
         <section>
           <h2> Service Workers </h2>
         </section>
@@ -376,6 +371,13 @@ self.onmessage = function (e) {
           <img src="img/caniuse_sw.png" alt="caniuse page for Service Workers"/>
           <div class="footer text-muted">
             Source: <a href="http://caniuse.com/#feat=serviceworkers">Can I use service workers?</a>
+          </div>
+        </section>
+
+        <section>
+          <img class="no-border" src="img/is_sw_ready.png" alt="is service worker ready page"/>
+          <div class="footer text-muted">
+            Source: <a href="https://jakearchibald.github.io/isserviceworkerready/">Is ServiceWorker ready?</a>
           </div>
         </section>
 
@@ -408,6 +410,57 @@ self.addEventListener('fetch',
 </div>
 </div>
 </section>
+
+        <section>
+          <div>
+            <video height="400">
+              <source src="vid/cache_first.webm" type="video/webm" />
+              <source src="vid/cache_first.mp4" type="video/mp4" />
+            </video>
+          </div>
+          <div class="footer text-muted">
+            Source: <a href="https://jakearchibald.com/2014/offline-cookbook/">Offline Cookbook</a>
+          </div>
+        </section>
+
+        <section>
+          <table cellspacing="30px">
+            <tr><th></th><th>Web Workers</th><th>Service Workers</th></tr>
+            <tr><th class="fragment">Tab control</th><td class="fragment">Many per tab</td><td class="fragment">One for all tabs</td></tr>
+            <tr><th class="fragment">Lifetime</th><td class="fragment">Same as tab</td><td class="fragment">Outlives tab</td></tr>
+            <tr><th class="fragment">Good for</th><td class="fragment">Parallelism</td><td class="fragment">Offline</td></tr>
+          </table>
+        </section>
+
+        <section>
+          <h2>Protips</h2>
+        </section>
+
+        <section>
+          <h3>Beware of API support</h3>
+          <ul>
+            <li class="fragment">No XHR in SW, only <code>fetch()</code></li>
+            <li class="fragment">No LocalStorage</li>
+            <li class="fragment">No FileReader in Firefox <46</li>
+            <li class="fragment">No IndexedDB in Safari <10</li>
+            <li class="fragment">No <code>console</code> in Android <5</li>
+          </ul>
+        </section>
+
+        <section>
+          <img style="max-height:600px" src="img/functions.png" alt="Functions and classes available to workers"/>
+          <div class="footer text-muted">
+            Source: <a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Functions_and_classes_available_to_workers">MDN</a>
+          </div>
+        </section>
+
+        <section>
+          <img src="img/html5workertest.png" alt="html5workertest.com"/>
+          <div class="footer text-muted">
+            Source: <a href="https://html5workertest.com">HTML5WorkerTest</a>
+          </div>
+        </section>
+
         <section>
           <h2 class="random-color">Thank you!</h2>
           <img class="no-border pixel-image" style="display:block" width="100" src="img/kirby_expedition.gif"/>
