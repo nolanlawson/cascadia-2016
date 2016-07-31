@@ -180,7 +180,7 @@ $.ajax({
         </section>
 
         <section>
-          <h2>AJAX</h2>
+          <h2>XmlHTTPRequest</h2>
           <h4>(Yes, even async)</h4>
         </section>
 
@@ -215,7 +215,7 @@ $.ajax({
           <h3>Stuff that blocks the DOM</h3>
           <ul>
             <li class="fragment">IndexedDB</li>
-            <li class="fragment">AJAX</li>
+            <li class="fragment">XHR</li>
             <li class="fragment">JSON.parse</li>
             <li class="fragment">fetch</li>
             <li class="fragment">Garbage collection</li>
@@ -367,21 +367,7 @@ self.onmessage = function (e) {
           <h2> Service Workers </h2>
         </section>
 
-        <section>
-          <img src="img/caniuse_sw.png" alt="caniuse page for Service Workers"/>
-          <div class="footer text-muted">
-            Source: <a href="http://caniuse.com/#feat=serviceworkers">Can I use service workers?</a>
-          </div>
-        </section>
-
-        <section>
-          <img class="no-border" src="img/is_sw_ready.png" alt="is service worker ready page"/>
-          <div class="footer text-muted">
-            Source: <a href="https://jakearchibald.github.io/isserviceworkerready/">Is ServiceWorker ready?</a>
-          </div>
-        </section>
-
-        <section><pre><code class="java">
+        <section><pre><code class="java embiggen">
   class ServiceWorker extends WebWorker {
     /* ... */
   }
@@ -412,6 +398,20 @@ self.addEventListener('fetch',
 </section>
 
         <section>
+          <img src="img/caniuse_sw.png" alt="caniuse page for Service Workers"/>
+          <div class="footer text-muted">
+            Source: <a href="http://caniuse.com/#feat=serviceworkers">Can I use service workers?</a>
+          </div>
+        </section>
+
+        <section>
+          <img class="no-border" src="img/is_sw_ready.png" alt="is service worker ready page"/>
+          <div class="footer text-muted">
+            Source: <a href="https://jakearchibald.github.io/isserviceworkerready/">Is ServiceWorker ready?</a>
+          </div>
+        </section>
+
+        <section>
           <div>
             <video height="400">
               <source src="vid/cache_first.webm" type="video/webm" />
@@ -439,8 +439,8 @@ self.addEventListener('fetch',
         <section>
           <h3>Beware of API support</h3>
           <ul>
-            <li class="fragment">No XHR in SW, only <code>fetch()</code></li>
             <li class="fragment">No LocalStorage</li>
+            <li class="fragment">No XHR in SW, only <code>fetch()</code></li>
             <li class="fragment">No FileReader in Firefox <46</li>
             <li class="fragment">No IndexedDB in Safari <10</li>
             <li class="fragment">No <code>console</code> in Android <5</li>
@@ -460,6 +460,61 @@ self.addEventListener('fetch',
             Source: <a href="https://html5workertest.com">HTML5WorkerTest</a>
           </div>
         </section>
+
+<section>
+  <h3>promise-worker</h3>
+          <div style="display:flex;flex-direction:row;">
+            <div style="flex-grow: 1; flex-shrink: 1">
+          <pre><code class="javascript">// index.js
+var pw = new PromiseWorker(
+  new Worker('worker.js'));
+pw.postMessage('yo').then(supports => {
+  if (!supports) {
+    // fall back to worker polyfill
+  }
+});
+</code></pre>
+
+            </div>
+
+            <div style="flex-grow: 1; flex-shrink: 1;">
+          <pre><code class="javascript">// worker.js
+registerPromiseWorker(msg => {
+  return !!self.indexedDB;
+});</code></pre>
+</div>
+</div>
+  <div class="footer text-muted">
+    Source: <a href="https://github.com/nolanlawson/promise-worker">promise-worker</a>
+  </div>
+</section>
+
+<section>
+  <h3>pseudo-worker</h3>
+          <div style="display:flex;flex-direction:row;">
+            <div style="flex-grow: 1; flex-shrink: 1">
+          <pre><code class="javascript">// index.js
+var worker = new PseudoWorker(
+  'worker.js');
+var pm = new PromiseWorker(worker);
+pm.postMessage('yo').then(msg => {
+  // ...
+});
+</code></pre>
+
+            </div>
+
+            <div style="flex-grow: 1; flex-shrink: 1;">
+          <pre><code class="javascript">// worker.js
+registerPromiseWorker(msg => {
+  // This will run on the main thread!
+});</code></pre>
+</div>
+</div>
+  <div class="footer text-muted">
+    Source: <a href="https://github.com/nolanlawson/pseudo-worker">pseudo-worker</a>
+  </div>
+</section>
 
         <section>
           <h2 class="random-color">Thank you!</h2>

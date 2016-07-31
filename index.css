@@ -182,3 +182,8 @@ pre.overlay-inner {
 h1, h2, h3, h4, h5, h6 {
   hyphens: none !important; /* yolo */
 }
+
+.reveal pre code.embiggen {
+  font-size: 1.5em;
+  line-height: 1.5em;
+}
