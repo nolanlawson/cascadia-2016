@@ -188,6 +188,7 @@ h1, h2, h3, h4, h5, h6 {
   line-height: 1.5em;
 }
 
-video {
-  max-width: initial !important; /* fix for Edge black background */
+video.big-video {
+  max-width: initial !important;
+  max-height: initial !important;
 }
