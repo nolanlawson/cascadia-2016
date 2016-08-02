@@ -192,3 +192,16 @@ video.big-video {
   max-width: initial !important;
   max-height: initial !important;
 }
+
+table.fade-in-table {
+  border-collapse: collapse;
+}
+
+table.fade-in-table td,
+table.fade-in-table th {
+  padding: 20px;
+}
+
+table.fade-in-table td {
+  border: 2px solid #333;
+}

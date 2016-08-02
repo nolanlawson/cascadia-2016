@@ -18,7 +18,7 @@
 		<link rel="stylesheet" href="css/theme/simple.css" id="theme">
 
 		<!-- For syntax highlighting -->
-		<link rel="stylesheet" href="lib/css/zenburn.css">
+		<link rel="stylesheet" href="lib/css/tomorrow.css">
 
 		<link rel="stylesheet" href="index.css">
 
@@ -164,7 +164,7 @@ $.ajax({
 
         <section>
           <div>
-            <video height=500>
+            <video>
               <source src="vid/kirby_blocked_by_idb.webm" type="video/webm" />
               <source src="vid/kirby_blocked_by_idb.mp4" type="video/mp4" />
             </video>
@@ -181,7 +181,7 @@ $.ajax({
 
         <section>
           <div>
-            <video height=500>
+            <video>
               <source src="vid/kirby_blocked_by_ajax.webm" type="video/webm" />
               <source src="vid/kirby_blocked_by_ajax.mp4" type="video/mp4" />
             </video>
@@ -195,7 +195,7 @@ $.ajax({
 
         <section>
           <div>
-            <video height=500>
+            <video>
               <source src="vid/kirby_blocked_by_fetch.webm" type="video/webm" />
               <source src="vid/kirby_blocked_by_fetch.mp4" type="video/mp4" />
             </video>
@@ -362,11 +362,9 @@ self.onmessage = function (e) {
           <h2> Service Workers </h2>
         </section>
 
-        <section><pre><code class="java embiggen">
-  class ServiceWorker extends WebWorker {
-    /* ... */
-  }
-
+        <section><pre><code class="java embiggen">interface Worker {/*...*/}
+class WebWorker implements Worker {/*...*/}
+class ServiceWorker implements Worker {/*...*/}
 </code></pre></section>
 
         <section>
@@ -419,10 +417,10 @@ self.addEventListener('fetch',
         </section>
 
         <section>
-          <table cellspacing="30px">
+          <table class="fade-in-table" cellspacing="0">
             <tr><th></th><th>Web Workers</th><th>Service Workers</th></tr>
             <tr><th class="fragment">Tab control</th><td class="fragment">Many per tab</td><td class="fragment">One for all tabs</td></tr>
-            <tr><th class="fragment">Lifetime</th><td class="fragment">Same as tab</td><td class="fragment">Outlives tab</td></tr>
+            <tr><th class="fragment">Lifespan</th><td class="fragment">Same as tab</td><td class="fragment">Independent</td></tr>
             <tr><th class="fragment">Good for</th><td class="fragment">Parallelism</td><td class="fragment">Offline</td></tr>
           </table>
         </section>
@@ -510,6 +508,14 @@ registerPromiseWorker(msg => {
     Source: <a href="https://github.com/nolanlawson/pseudo-worker">pseudo-worker</a>
   </div>
 </section>
+
+                <section>
+                    <h3>Powerful concepts for the web</h3>
+                    <ul>
+                        <li class="fragment"><strong>Web Workers:</strong> parallelism</li>
+                        <li class="fragment"><strong>Service Workers:</strong> offline</li>
+                    </ul>
+                </section>
 
         <section>
           <h2 class="random-color">Thank you!</h2>
