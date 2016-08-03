@@ -205,3 +205,16 @@ table.fade-in-table th {
 table.fade-in-table td {
   border: 2px solid #333;
 }
+
+.signature {
+  position: absolute;
+  bottom:0;
+  left:0;
+  right:0;
+  padding-bottom: 56px;
+  padding-left: 30px;
+  font-size: 22px;
+  color: darkblue;
+  font-family: Arial, Helvetica, "sans-serif";
+  z-index: 1000;
+}
