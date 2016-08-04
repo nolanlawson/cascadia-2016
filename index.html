@@ -650,7 +650,7 @@ registerPromiseWorker(msg => {
         var videos = Array.from(
           document.querySelectorAll('section.present video'));
         videos.forEach(function (vid) {
-          vid.loop = !vid.classList.contains('play-once');
+          vid.loop = true;
           vid.currentTime = 0;
           vid.play();
         });
@@ -658,14 +658,16 @@ registerPromiseWorker(msg => {
         var otherVideos = Array.from(document.querySelectorAll('section.past video')).concat(
           Array.from(document.querySelectorAll('section.future video')));
         otherVideos.forEach(function (vid) {
-          vid.pause();
+          if (!vid.paused) {
+            vid.pause();
+          }
         });
       }
 
       Reveal.addEventListener( 'slidechanged', function( event ) {
         // event.previousSlide, event.currentSlide, event.indexh, event.indexv
         var notes = event.currentSlide.querySelector(".notes");
-        if(notes) {
+        if (notes) {
           console.info(notes.innerHTML.replace(/\n\s+/g,'\n'));
         }
 
