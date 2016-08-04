@@ -88,6 +88,10 @@
         </section>
 
         <section>
+          <h2>edge.ms</h2>
+        </section>
+
+        <section>
           <h2>Why Web Workers?</h2>
         </section>
 
@@ -152,13 +156,9 @@
         </section>
 
         <section>
-          <pre><code class="javascript">// Everything between here...
-$.ajax({
-  url: '/payload.json',
-  dataType: 'json',
-  success: function (response) {
-    // ... and here is free, right?
-  }
+          <pre><code class="javascript embiggen">// Everything between here...
+$.getJSON('/payload.json', function (response) {
+  // ... and here is free, right?
 });</code></pre>
         </section>
 
@@ -273,7 +273,7 @@ self.onmessage = function (e) {
 
         <section>
           <div>
-            <video height=550>
+            <video style="transform: translateY(-50px)">
               <source src="vid/kirby_unblocked_by_idb.webm" type="video/webm" />
               <source src="vid/kirby_unblocked_by_idb.mp4" type="video/mp4" />
             </video>
@@ -364,12 +364,21 @@ self.onmessage = function (e) {
         </section>
 -->
         <section>
-          <h2> Service Workers </h2>
+          <h2> Why Service Workers? </h2>
         </section>
 
-        <section><pre><code class="java embiggen">interface Worker {/*...*/}
-class WebWorker implements Worker {/*...*/}
-class ServiceWorker implements Worker {/*...*/}
+        <section>
+          <div>
+            <video>
+              <source src="vid/offline.webm" type="video/webm" />
+              <source src="vid/offline.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </section>
+
+        <section><pre><code class="java embiggen">interface Worker {}
+class WebWorker implements Worker {}
+class ServiceWorker implements Worker {}
 </code></pre></section>
 
         <section>
@@ -458,6 +467,10 @@ self.addEventListener('fetch',
             Source: <a href="https://html5workertest.com">HTML5WorkerTest</a>
           </div>
         </section>
+
+        <section>
+          <h2>html5workertest.com</h2>
+          </section>
 
 <section>
   <h3>promise-worker</h3>
