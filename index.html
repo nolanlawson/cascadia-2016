@@ -655,20 +655,6 @@ registerPromiseWorker(msg => {
         });
       }
 
-      function playGif() {
-        var gifs = Array.from(
-          document.querySelectorAll('section.present img[src*=gif]'));
-        gifs.forEach(function (gif) {
-          var newSrc = gif.src.replace(/(\?nonce=.*?)?$/, '?nonce=' +
-            Math.round(100000000 * Math.random()));
-          // reset the gif
-          gif.src = '';
-          requestAnimationFrame(function () {
-            gif.src = newSrc;
-          });
-        });
-      }
-
       Reveal.addEventListener( 'slidechanged', function( event ) {
         // event.previousSlide, event.currentSlide, event.indexh, event.indexv
         var notes = event.currentSlide.querySelector(".notes");
@@ -681,7 +667,6 @@ registerPromiseWorker(msg => {
           randomizeText(event.currentSlide);
           requestAnimationFrame(function () {
             playVideo();
-            playGif();
           });
 
         });
@@ -708,7 +693,6 @@ registerPromiseWorker(msg => {
       }
 
       playVideo();
-      playGif();
 
       randomizeText(document.querySelector('section.present'));
 
