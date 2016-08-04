@@ -89,7 +89,7 @@
 
         <section>
           <h3>http://edge.ms</h3>
-          <img style="max-width:800px" src="img/edgems.png" alt="edge.ms website"/>
+          <img class="no-border" style="max-width:800px" src="img/edgems.png" alt="edge.ms website"/>
         </section>
 
         <section>
@@ -290,7 +290,14 @@ self.onmessage = function (e) {
             <li>Many others</li>
           </ul>
         </section>
-
+        <section>
+          <div>
+            <video height=650>
+              <source src="vid/pokedex_loop.webm" type="video/webm" />
+              <source src="vid/pokedex_loop.mp4" type="video/mp4" />
+            </video>
+          </div>
+        </section>
         <!--
         <section>
           <h3>What can Web Workers do?</h3>
@@ -376,12 +383,12 @@ self.onmessage = function (e) {
             </video>
           </div>
         </section>
-
+<!--
         <section><pre><code class="java embiggen">interface Worker {}
 class WebWorker implements Worker {}
 class ServiceWorker implements Worker {}
 </code></pre></section>
-
+-->
         <section>
           <div style="display:flex;flex-direction:row;">
             <div style="flex-grow: 1; flex-shrink: 1">
@@ -531,8 +538,8 @@ registerPromiseWorker(msg => {
                 <section>
                     <h3>Powerful concepts for the web</h3>
                     <ul>
-                        <li class="fragment"><strong>Web Workers:</strong> parallelism</li>
-                        <li class="fragment"><strong>Service Workers:</strong> offline</li>
+                        <li class="fragment" data-fragment-index="1"><strong>Parallelism</strong> <span class="fragment" data-fragment-index="3">(Web Workers)</span></li>
+                        <li class="fragment" data-fragment-index="2"><strong>Offline</strong> <span class="fragment" data-fragment-index="4">(Service Workers)</span></li>
                     </ul>
                 </section>
 
